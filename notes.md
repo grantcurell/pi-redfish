@@ -117,3 +117,6 @@ Maybe helpful - I don't really understand: https://raspberrypi.stackexchange.com
 ## Random
 
 OTG = (USB) on the go
+
+What does VCC mean?
+- Something to do with the GPIO to relay
