@@ -10,6 +10,10 @@ https://github.com/codazoda/hub-ctrl.c#controlling-power
 
 Found this in `resetPi0HID.sh`. This means hub 0, port 1, turn power off. `p 1` would turn it back on.
 
+## v4l2-ctl
+
+An application to control video4linux drivers
+
 ### Pi Zero vs Pi 4
 
 From https://gist.github.com/gbaman/50b6cca61dd1c3f88f41. 
@@ -68,17 +72,71 @@ State can be 0 / GPIO.LOW / False or 1 / GPIO.HIGH / True.
 
 ## uart (universal asynchronous receiver/transmitter)
 
+https://www.circuitbasics.com/basics-uart-communication/
+
 UART stands for Universal Asynchronous Receiver/Transmitter. It’s not a communication protocol like SPI and I2C, but a physical circuit in a microcontroller, or a stand-alone IC. A UART’s main purpose is to transmit and receive serial data.
 
 One of the best things about UART is that it only uses two wires to transmit data between devices. 
 
-https://www.circuitbasics.com/basics-uart-communication/
+### How it Works
 
+In UART communication, two UARTs communicate directly with each other. The transmitting UART converts parallel data from a controlling device like a CPU into serial form, transmits it in serial to the receiving UART, which then converts the serial data back into parallel data for the receiving device. Only two wires are needed to transmit data between two UARTs. Data flows from the Tx pin of the transmitting UART to the Rx pin of the receiving UART:
+
+![](2021-03-11-08-37-32.png)
+
+UARTs transmit data asynchronously, which means there is no clock signal to synchronize the output of bits from the transmitting UART to the sampling of bits by the receiving UART. Instead of a clock signal, the transmitting UART adds start and stop bits to the data packet being transferred. These bits define the beginning and end of the data packet so the receiving UART knows when to start reading the bits.
+
+When the receiving UART detects a start bit, it starts to read the incoming bits at a specific frequency known as the baud rate. Baud rate is a measure of the speed of data transfer, expressed in bits per second (bps). Both UARTs must operate at about the same baud rate. The baud rate between the transmitting and receiving UARTs can only differ by about 10% before the timing of bits gets too far off.
+
+![](2021-03-11-08-40-29.png)
+
+## Parallel vs Serial visualized
+
+![](2021-03-11-08-43-42.png)
+
+![](2021-03-11-08-43-54.png)
 ## SPI
 
+https://www.circuitbasics.com/basics-of-the-spi-communication-protocol
 
+### General Overview
 
+SPI is a common communication protocol used by many different devices. For example, SD card modules, RFID card reader modules, and 2.4 GHz wireless transmitter/receivers all use SPI to communicate with microcontrollers.
 
+One unique benefit of SPI is the fact that data can be transferred without interruption. Any number of bits can be sent or received in a continuous stream. With I2C and UART, data is sent in packets, limited to a specific number of bits. Start and stop conditions define the beginning and end of each packet, so the data is interrupted during transmission.
+
+### Master / Slave Relationship
+
+Devices communicating via SPI are in a master-slave relationship. The master is the controlling device (usually a microcontroller), while the slave (usually a sensor, display, or memory chip) takes instruction from the master. The simplest configuration of SPI is a single master, single slave system, but one master can control more than one slave (more on this below).
+
+![](2021-03-11-08-45-28.png)
+
+**MOSI (Master Output/Slave Input)** - Line for the master to send data to the slave
+**MISO (Master Input/Slave Output)** - Line for the slave to send data to the master
+**SCLK (Clock)** - Line for the clock signal
+**SS/CS (Slave Select/Chip Select)** - Line for the master to select which slave to send data to
+
+![](2021-03-11-08-47-04.png)
+
+### The Clock
+
+The clock signal synchronizes the output of data bits from the master to the sampling of bits by the slave. One bit of data is transferred in each clock cycle, so the speed of data transfer is determined by the frequency of the clock signal. SPI communication is always initiated by the master since the master configures and generates the clock signal.
+
+Any communication protocol where devices share a clock signal is known as synchronous. SPI is a synchronous communication protocol. There are also asynchronous methods that don’t use a clock signal. For example, in UART communication, both sides are set to a pre-configured baud rate that dictates the speed and timing of data transmission.
+
+### Slave Select
+
+The master can choose which slave it wants to talk to by setting the slave’s CS/SS line to a low voltage level. In the idle, non-transmitting state, the slave select line is kept at a high voltage level. Multiple CS/SS pins may be available on the master, which allows for multiple slaves to be wired in parallel. If only one CS/SS pin is present, multiple slaves can be wired to the master by daisy-chaining.
+
+#### Multiple Slaves
+
+SPI can be set up to operate with a single master and a single slave, and it can be set up with multiple slaves controlled by a single master. There are two ways to connect multiple slaves to the master. If the master has multiple slave select pins, the slaves can be wired in parallel like this:
+
+![](2021-03-11-08-51-32.png)
+
+If only one slave select pin is available, the slaves can be daisy-chained like this:
+
+![](2021-03-11-08-51-56.png)
 ## avconv
 
 https://libav.org/avconv.html
