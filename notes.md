@@ -172,6 +172,24 @@ In `image.php`:
 
 Maybe helpful - I don't really understand: https://raspberrypi.stackexchange.com/questions/77059/what-does-dtoverlay-dwc2-really-do/77061
 
+According to [this post](https://www.raspberrypi.org/forums/viewtopic.php?t=179259) it seems like these are drivers.
+
+    dwc_otg is the driver that has been heavily patched to squeeze most performance & function in host mode on the Pi: the fiq stuff etc. So heavily patched that, despite the name, it only does host mode & not OTG.
+
+    dwc2 is an upstream driver which can do the OTG host/gadget flip dictated by OTG_SENSE. In host mode performance will pale cf dwc_otg, hence it's only recommended for gadget mode.
+
+## enableHID.sh
+
+https://www.circuitbasics.com/raspberry-pi-zero-ethernet-gadget/
+
+Based on the diagram and the fact that this is the Pi0 this seems to have something to do with forwarding the USB ports of the host in question.
+
+**Update**: This seems to make the pi an actual USB device
+### libcomposite
+
+This library seems to give you control of making "gadgets"
+
+
 ## Random
 
 OTG = (USB) on the go
