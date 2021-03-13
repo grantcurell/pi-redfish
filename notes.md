@@ -170,13 +170,30 @@ In `image.php`:
 
 ## dtoverlay=dwc2
 
-Maybe helpful - I don't really understand: https://raspberrypi.stackexchange.com/questions/77059/what-does-dtoverlay-dwc2-really-do/77061
+https://raspberrypi.stackexchange.com/questions/77059/what-does-dtoverlay-dwc2-really-do/77061
+
+**Note:** OTG means On the Go
 
 According to [this post](https://www.raspberrypi.org/forums/viewtopic.php?t=179259) it seems like these are drivers.
 
     dwc_otg is the driver that has been heavily patched to squeeze most performance & function in host mode on the Pi: the fiq stuff etc. So heavily patched that, despite the name, it only does host mode & not OTG.
 
     dwc2 is an upstream driver which can do the OTG host/gadget flip dictated by OTG_SENSE. In host mode performance will pale cf dwc_otg, hence it's only recommended for gadget mode.
+
+### dtoverlay
+
+See *Part 2: Device Tree overlays*
+
+https://www.raspberrypi.org/documentation/configuration/device-tree.md
+
+### USB Slave
+
+https://www.techwalla.com/articles/what-is-a-usb-slave
+
+USB connectors follow a master/slave relationship. That means that one device, usually a personal computer, acts as the master by controlling information in and out of a USB port. The USB peripheral, for example a small flash drive, acts as a slave. It can be operated only by the master or it won't work. In that respect, some USB slaves are useless unless connected to a master device.
+
+The term "USB slaves" covers a whole range of peripheral devices. One of the more common forms of USB slave is the flash or thumb drive. These small units plug in to USB hubs on computers, offering chunks of external storage ranging from 256MB to 16GB and beyond. However, USB slaves also include devices such as webcams, printers or scanners. In each case, the device needs the master computer for full functionality, though some USB slaves such as cameras will work regardless. Some peripherals, such as smartphones, are not strictly slave devices, though they act as such when plugged into a computer.
+
 
 ## enableHID.sh
 
@@ -189,10 +206,47 @@ Based on the diagram and the fact that this is the Pi0 this seems to have someth
 
 This library seems to give you control of making "gadgets"
 
+## What is a relay?
 
-## Random
+https://en.wikipedia.org/wiki/Relay
 
-OTG = (USB) on the go
+A relay is an electrically operated switch. It consists of a set of input terminals for a single or multiple control signals, and a set of operating contact terminals. The switch may have any number of contacts in multiple contact forms, such as make contacts, break contacts, or combinations thereof.
+
+![](2021-03-12-13-16-48.png)
+
+Pin 87A and pin 30 are connected at rest. When you don't energize the relay, when it's a resting relay, if you look at my relay the three dots represent 30, 87, 87A. 87 is the energized connection and 87A is non energized. 30 is the input. Python program would be 86 - the signal wire (maybe 85). 
+
+UPDATE: Purple is actually positive!
+85/86 are signal pins. 85 is generally power (positive), 86 is generally negative input. In my diagram, we assume that the purple lines are a negative trigger. Nothing is happening on purple and when it executes it sends a negative signal down purple (probably). Generally better to signal negative; the reason is it limits the positive signal we're throwing so we don't short circuit something. 
+
+The red wire would go to all relays on pin 85. The purple would go to pin 86 on all relays. When the program executes it sends a negative trigger which would then pull it to 87 from 87A.
+
+The center dot is connected to 87A. If you wanted it connected at rest you would put it on that middle dot.
 
 What does VCC mean?
 - Something to do with the GPIO to relay
+- Red wire is JDVCC and the purple wire is VCC
+
+https://www.amazon.com/ask/questions/Tx3KQNCLLE7G8SC
+
+The jumper is making the relay input the same as the signal input. The jumper is saying how do you want the signal to the relay to be controlled. Do you want to control it through JDVCC or through ground. It's defining what is purple input.
+### What controls the amperage of the relay
+
+It's controlled by the 
+### Voltages
+
+A volt relay requires a 5 volt negative and a 5 volt positive
+
+Once you energize that relay there is nothing that says 30, 87, 87A have to be. You could connect a power connection of some other connection. You're only limited by the amount of current that can flow through the relay.
+
+## What is a ground?
+
+https://www.build-electronic-circuits.com/what-is-ground/
+
+![](2021-03-12-12-52-09.png)
+
+This is not a real series connection. By putting the ground in there you're making it so you're offering two different power sources but they aren't addititive.
+
+USB connections are 5 volts (USB 2.0). That's how you're getting 5 volts 
+
+5 volt 

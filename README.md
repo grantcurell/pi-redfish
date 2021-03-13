@@ -19,7 +19,7 @@ A full wishlist totaling under $120 at the time of this writing can be found at 
 
 ## Before assembling
 
-On the Pi3, flash http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2017-09-08/. As of this writing you may use the latest Stretch version, however this was the version used successfully.
+On the Pi4, flash https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-01-12/. As of this writing you may use the latest Stretch version, however this was the version used successfully. You can use [these instructions](https://randomnerdtutorials.com/installing-raspbian-lite-enabling-and-connecting-with-ssh/) to accomplish this. You can use the [Raspberry Pi official imager](https://www.raspberrypi.org/documentation/installation/installing-images/) to write the image to  the SD card.
 
 On the Pi0, flash http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2017-03-03/. You must use this version for this to work. There aren't really security implications since the Pi0 can only be accessed from a serial session on the Pi3.
 
